@@ -1,0 +1,229 @@
+definitions:
+  handler.getAllSongsResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Song'
+        type: array
+    type: object
+  handler.signInInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Song:
+    properties:
+      date:
+        type: string
+      genre:
+        type: string
+      group:
+        type: string
+      id:
+        type: integer
+      link:
+        type: string
+      lyrics:
+        type: string
+      song:
+        type: string
+    required:
+    - group
+    - song
+    type: object
+  models.User:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - name
+    - password
+    - username
+    type: object
+  utility.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/songs:
+    get:
+      consumes:
+      - application/json
+      description: get all songs
+      operationId: get-all-songs
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getAllSongsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Songs
+      tags:
+      - songs
+    post:
+      consumes:
+      - application/json
+      description: create song
+      operationId: create-song
+      parameters:
+      - description: song info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.Song'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create song
+      tags:
+      - songs
+  /api/songs/:id:
+    get:
+      consumes:
+      - application/json
+      description: get song by id
+      operationId: get-song-by-id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Song'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Song By id
+      tags:
+      - songs
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user and return a JWT token
+      operationId: sign-in
+      parameters:
+      - description: User credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.signInInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: JWT token
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+      summary: Log in an existing user
+      tags:
+      - auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account
+      operationId: sign-up
+      parameters:
+      - description: User information
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User ID
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utility.ErrorResponse'
+      summary: Register a new user
+      tags:
+      - auth
+swagger: "2.0"

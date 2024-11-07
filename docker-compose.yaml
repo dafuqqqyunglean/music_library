@@ -1,0 +1,28 @@
+services:
+  app:
+    build: .
+    container_name: music_app
+    ports:
+      - "8080:8080"
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=music_user
+      - POSTGRES_PASSWORD=music_password
+      - POSTGRES_DB=postgres
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14
+    container_name: music_postgres
+    environment:
+      POSTGRES_USER: music_user
+      POSTGRES_PASSWORD: music_password
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

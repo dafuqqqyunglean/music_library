@@ -1,0 +1,1 @@
+INSERT INTO users_songs (user_id, song_id) VALUES ($1, $2)
